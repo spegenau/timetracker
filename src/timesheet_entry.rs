@@ -32,7 +32,6 @@ impl TimeSheetEntry {
         let duration = end - start;
 
         duration.num_minutes()
-
     }
 }
 
@@ -43,9 +42,7 @@ pub trait TimeSheetEntries {
 
 fn format_datetime(datetime: Option<DateTime<Local>>) -> String {
     match datetime {
-        Some(datetime) => {
-            datetime.format("%H:%M:%S").to_string()
-        },
+        Some(datetime) => datetime.format("%H:%M:%S").to_string(),
         None => String::from(""),
     }
 }
@@ -55,10 +52,14 @@ impl TimeSheetEntries for Vec<TimeSheetEntry> {
         // Create the table
         let mut table = Table::new();
 
-        table.add_row(row!["Start", "End", "Duration (minutes)", "Project", "Description"]);
+        table.add_row(row![
+            "Start",
+            "End",
+            "Duration (minutes)",
+            "Project",
+            "Description"
+        ]);
 
-
-        
         for entry in self {
             let mut descriptions = entry.description.clone();
             descriptions.sort();
@@ -75,19 +76,19 @@ impl TimeSheetEntries for Vec<TimeSheetEntry> {
 
         table
     }
-    
+
     fn time_per_projects(&self) -> Table {
         // Create the table
         let mut table = Table::new();
 
         table.add_row(row!["Project", "Duration (minutes)"]);
-        
+
         let mut durations: HashMap<String, i64> = HashMap::new();
 
         for entry in self {
             let project = entry.project.clone();
             if !durations.contains_key(&project) {
-                durations.insert(project.clone(), 0);   
+                durations.insert(project.clone(), 0);
             }
 
             let duration = durations.get(&project).unwrap() + entry.get_duration_as_minutes();
@@ -96,10 +97,11 @@ impl TimeSheetEntries for Vec<TimeSheetEntry> {
         }
 
         for (project, duration) in &durations {
-            table.add_row(row![project, duration]);
+            if *duration > 0 {
+                table.add_row(row![project, duration]);
+            }
         }
 
         table
-        
     }
 }

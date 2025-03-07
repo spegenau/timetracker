@@ -7,7 +7,6 @@ pub struct Record {
     pub time: DateTime<Local>,
     pub application: String,
     pub title: String,
-    pub path: String,
 }
 
 impl Record {
@@ -16,7 +15,7 @@ impl Record {
             start_time: Some(self.time),
             end_time: Some(self.time),
             project: self.guess_project(config),
-            description: vec![format!("{} - {} - {}", self.application, self.title, self.path.clone())],
+            description: vec![format!("{} - {}", self.application, self.title)],
         }
     }
 
@@ -32,11 +31,13 @@ impl Record {
                     return project.name.clone();
                 }
             }
+            /*
             for keyword in &project.path_keywords {
                 if self.path.contains(keyword) {
                     return project.name.clone();
                 }
             }
+            */
         }
 
         String::from("UNKNOWN")

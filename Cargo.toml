@@ -17,6 +17,7 @@ path = "src/main_parser.rs"
 active-win-pos-rs = "0.8.3"
 chrono = {version = "0.4.38", features = ["serde"]}
 csv = "1.3.0"
+dirs = "6.0.0"
 prettytable-rs = "0.10.0"
 serde = {version = "1.0.203", features = ["serde_derive"]}
 serde_json = "1.0.117"
